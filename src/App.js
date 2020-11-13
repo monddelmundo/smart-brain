@@ -33,6 +33,7 @@ const initialState = {
   // isSignedIn: true, //for dev only
   isSignedIn: false, //for prd only
   isProfileOpen: false, //for prd only
+  mounted: false,
   user: {
     id: "",
     name: "",
@@ -52,6 +53,7 @@ class App extends Component {
 
   componentDidMount() {
     const token = localStorage.getItem("token");
+
     if (token) {
       fetch("http://localhost:3000/signin", {
         method: "post",
@@ -64,12 +66,18 @@ class App extends Component {
         .then((data) => {
           this.getUserProfile(data, token)
             .then((user) => {
+              this.setState({ mounted: true });
               this.loadUser(user);
               this.onRouteChange("home");
             })
             .catch((err) => console.log("Unable to get user profile"));
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          if (localStorage.getItem("token")) localStorage.removeItem("token");
+          this.setState({ mounted: true });
+        });
+    } else {
+      this.setState({ mounted: true });
     }
   }
 
@@ -173,9 +181,8 @@ class App extends Component {
       })
         .then((response) => response.json())
         .then((resp) => {
-          console.log(resp);
           localStorage.removeItem("token");
-          return this.setState(initialState);
+          return this.setState({ ...initialState, mounted: true });
         })
         .catch((err) => console.log("Unable to sign out"));
     } else if (route === "home") {
@@ -199,15 +206,18 @@ class App extends Component {
       boxes,
       isProfileOpen,
       user,
+      mounted,
     } = this.state;
     return (
       <div className="App">
         <Particles className="particles" params={particlesOptions} />
-        <Navigation
-          isSignedIn={isSignedIn}
-          onRouteChange={this.onRouteChange}
-          toggleModal={this.toggleModal}
-        />
+        {mounted ? (
+          <Navigation
+            isSignedIn={isSignedIn}
+            onRouteChange={this.onRouteChange}
+            toggleModal={this.toggleModal}
+          />
+        ) : null}
         {isProfileOpen && (
           <Modal>
             <Profile
@@ -232,11 +242,13 @@ class App extends Component {
             <FaceRecognition boxes={boxes} imageUrl={imageUrl} />
           </div>
         ) : route === "signin" ? (
-          <Signin
-            loadUser={this.loadUser}
-            onRouteChange={this.onRouteChange}
-            getUserProfile={this.getUserProfile}
-          />
+          mounted ? (
+            <Signin
+              loadUser={this.loadUser}
+              onRouteChange={this.onRouteChange}
+              getUserProfile={this.getUserProfile}
+            />
+          ) : null
         ) : (
           <Register
             loadUser={this.loadUser}
