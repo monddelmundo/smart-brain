@@ -9,6 +9,7 @@ import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
+import { postSignIn } from "../../api/signIn";
 import "./App.css";
 
 const particlesOptions = {
@@ -55,13 +56,14 @@ class App extends Component {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetch("http://localhost:3000/signin", {
-        method: "post",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      })
+      // fetch("http://localhost:3000/signin", {
+      //   method: "post",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: token,
+      //   },
+      // })
+      postSignIn()
         .then((response) => response.json())
         .then((data) => {
           this.getUserProfile(data, token)

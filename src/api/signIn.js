@@ -14,3 +14,12 @@ export const postSignIn = (data) => {
     .then(handleResponse)
     .catch(handleError);
 };
+
+export const postSignIn = () => {
+  fetch(baseUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  })
+    .then(handleResponse)
+    .catch(handleError);
+};
