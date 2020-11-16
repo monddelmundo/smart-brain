@@ -1,5 +1,6 @@
 import React from "react";
 import "./Signin.css";
+import { postSignIn } from "../../api/signIn";
 
 class Signin extends React.Component {
   constructor(props) {
@@ -23,13 +24,17 @@ class Signin extends React.Component {
   };
 
   onSubmitSignIn = () => {
-    fetch("http://localhost:3000/signin", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: this.state.signInEmail,
-        password: this.state.signInPassword,
-      }),
+    // fetch("http://localhost:3000/signin", {
+    //   method: "post",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     email: this.state.signInEmail,
+    //     password: this.state.signInPassword,
+    //   }),
+    // })
+    postSignIn({
+      signInEmail: this.state.signInEmail,
+      signInPassword: this.state.signInPassword,
     })
       .then((response) => response.json())
       .then((data) => {
