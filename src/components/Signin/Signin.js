@@ -1,6 +1,6 @@
 import React from "react";
 import "./Signin.css";
-import { postSignIn } from "../../api/signIn";
+import { postSignInApi } from "../../api/signIn";
 
 class Signin extends React.Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class Signin extends React.Component {
   };
 
   onSubmitSignIn = () => {
-    // fetch("http://localhost:3000/signin", {
+    // fetch("https://smart-brain-api-devcoral.herokuapp.com/signin", {
     //   method: "post",
     //   headers: { "Content-Type": "application/json" },
     //   body: JSON.stringify({
@@ -32,11 +32,11 @@ class Signin extends React.Component {
     //     password: this.state.signInPassword,
     //   }),
     // })
-    postSignIn({
+    postSignInApi({
       signInEmail: this.state.signInEmail,
       signInPassword: this.state.signInPassword,
     })
-      // .then((response) => response.json())
+      .then((response) => response.json())
       .then((data) => {
         if (data.id && data.success === true) {
           this.saveAuthTokenInSession(data.token);
@@ -45,6 +45,9 @@ class Signin extends React.Component {
             this.props.onRouteChange("home");
           });
         }
+      })
+      .catch((err) => {
+        alert("Incorrect username and password!");
       });
   };
 

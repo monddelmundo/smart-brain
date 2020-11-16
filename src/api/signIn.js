@@ -2,8 +2,8 @@ import { handleResponse, handleError } from "./apiUtils";
 
 const baseUrl = process.env.REACT_APP_DEV_API_URL + "/signin";
 
-export const postSignIn = (data) => {
-  fetch(baseUrl, {
+export const postSignInApi = (data) => {
+  return fetch(baseUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -15,10 +15,13 @@ export const postSignIn = (data) => {
     .catch(handleError);
 };
 
-export const postSignInWithoutBody = () => {
-  fetch(baseUrl, {
+export const postSignInWithoutBodyApi = (token) => {
+  return fetch(baseUrl, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
   })
     .then(handleResponse)
     .catch(handleError);

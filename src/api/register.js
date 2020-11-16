@@ -2,8 +2,8 @@ import { handleResponse, handleError } from "./apiUtils";
 
 const baseUrl = process.env.REACT_APP_DEV_API_URL + "/register";
 
-export const postRegister = (data) => {
-  fetch(baseUrl, {
+export const postRegisterApi = (data) => {
+  return fetch(baseUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

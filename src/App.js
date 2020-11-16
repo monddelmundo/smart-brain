@@ -9,7 +9,11 @@ import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
-import { postSignInWithoutBody } from "./api/signIn";
+import { postSignInWithoutBodyApi } from "./api/signIn";
+import { getProfileApi } from "./api/profile";
+import { getImageApi } from "./api/image";
+import { postImageUrlApi } from "./api/imageUrl";
+import { getSignOutApi } from "./api/signOut";
 import "./App.css";
 
 const particlesOptions = {
@@ -56,15 +60,15 @@ class App extends Component {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // fetch("http://localhost:3000/signin", {
+      // fetch("https://smart-brain-api-devcoral.herokuapp.com/signin", {
       //   method: "post",
       //   headers: {
       //     "Content-Type": "application/json",
       //     Authorization: token,
       //   },
       // })
-      postSignInWithoutBody()
-        // .then((response) => response.json())
+      postSignInWithoutBodyApi(token)
+        .then((response) => response.json())
         .then((data) => {
           this.getUserProfile(data, token)
             .then((user) => {
@@ -85,10 +89,19 @@ class App extends Component {
 
   getUserProfile(data, token) {
     if (data?.id != undefined) {
-      return fetch(`http://localhost:3000/profile/${data.id}`, {
-        method: "get",
-        headers: { "Content-Type": "application/json", Authorization: token },
-      })
+      // return (
+      //   fetch(
+      //     `https://smart-brain-api-devcoral.herokuapp.com/profile/${data.id}`,
+      //     {
+      //       method: "get",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //         Authorization: token,
+      //       },
+      //     }
+      //   )
+
+      return getProfileApi(token, data.id)
         .then((response) => response.json())
         .then((user) => {
           if (user.id) {
@@ -96,6 +109,7 @@ class App extends Component {
           }
         })
         .catch((err) => console.log("Unable to get user profile"));
+      // );
     }
   }
 
@@ -143,26 +157,28 @@ class App extends Component {
   onButtonSubmit = () => {
     const token = localStorage.getItem("token");
     this.setState({ imageUrl: this.state.input });
-    fetch("http://localhost:3000/imageurl", {
-      method: "post",
-      headers: { "Content-Type": "application/json", Authorization: token },
-      body: JSON.stringify({
-        input: this.state.input,
-      }),
-    })
+    // fetch("http://localhost:3000/imageurl", {
+    //   method: "post",
+    //   headers: { "Content-Type": "application/json", Authorization: token },
+    //   body: JSON.stringify({
+    //     input: this.state.input,
+    //   }),
+    // })
+    postImageUrlApi(token, this.state.input)
       .then((response) => response.json())
       .then((response) => {
         if (response) {
-          fetch("http://localhost:3000/image", {
-            method: "put",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-            body: JSON.stringify({
-              id: this.state.user.id,
-            }),
-          })
+          // fetch("http://localhost:3000/image", {
+          //   method: "put",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //     Authorization: token,
+          //   },
+          //   body: JSON.stringify({
+          //     id: this.state.user.id,
+          //   }),
+          // })
+          getImageApi(token, this.state.user.id)
             .then((response) => response.json())
             .then((count) => {
               this.setState(Object.assign(this.state.user, { entries: count }));
@@ -177,10 +193,11 @@ class App extends Component {
   onRouteChange = (route) => {
     if (route === "signout") {
       const token = localStorage.getItem("token");
-      return fetch("http://localhost:3000/signout", {
-        method: "get",
-        headers: { "Content-Type": "application/json", Authorization: token },
-      })
+      // return fetch("http://localhost:3000/signout", {
+      //   method: "get",
+      //   headers: { "Content-Type": "application/json", Authorization: token },
+      // })
+      return getSignOutApi(token)
         .then((response) => response.json())
         .then((resp) => {
           localStorage.removeItem("token");

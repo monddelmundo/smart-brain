@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { postProfileApi } from "../../api/profile";
 import "./Profile.css";
 
 const Profile = ({ isProfileOpen, loadUser, toggleModal, user }) => {
@@ -30,11 +31,12 @@ const Profile = ({ isProfileOpen, loadUser, toggleModal, user }) => {
 
   const onProfileUpdate = (data) => {
     const token = localStorage.getItem("token");
-    fetch(`http://localhost:3000/profile/${user.id}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: token },
-      body: JSON.stringify({ formInput: data }),
-    })
+    // fetch(`http://localhost:3000/profile/${user.id}`, {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json", Authorization: token },
+    //   body: JSON.stringify({ formInput: data }),
+    // })
+    postProfileApi(token, user.id, data)
       .then((resp) => {
         //304 means response was cached by the browser
         //and it just returns the cached value

@@ -2,8 +2,8 @@ import { handleResponse, handleError } from "./apiUtils";
 
 const baseUrl = process.env.REACT_APP_DEV_API_URL + "/image";
 
-export const getImage = (id) => {
-  fetch(baseUrl, {
+export const getImageApi = (token, id) => {
+  return fetch(baseUrl, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

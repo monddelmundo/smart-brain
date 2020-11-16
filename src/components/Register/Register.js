@@ -1,4 +1,5 @@
 import React from "react";
+import { postRegisterApi } from "../../api/register";
 
 class Register extends React.Component {
   constructor(props) {
@@ -23,18 +24,22 @@ class Register extends React.Component {
   };
 
   onSubmitSignIn = () => {
-    fetch("https://smart-brain-api-devcoral.herokuapp.com/register", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: this.state.email,
-        password: this.state.password,
-        name: this.state.name,
-      }),
+    // fetch("https://smart-brain-api-devcoral.herokuapp.com/register", {
+    //   method: "post",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({
+    //     email: this.state.email,
+    //     password: this.state.password,
+    //     name: this.state.name,
+    //   }),
+    // })
+    postRegisterApi({
+      email: this.state.email,
+      password: this.state.password,
+      name: this.state.name,
     })
       .then((response) => response.json())
       .then((resp) => {
-        console.log(resp);
         this.props.onRouteChange("signin");
       });
   };
