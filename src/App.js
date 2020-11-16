@@ -9,7 +9,7 @@ import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import Modal from "./components/Modal/Modal";
 import Profile from "./components/Profile/Profile";
-import { postSignIn } from "./api/signIn";
+import { postSignInWithoutBody } from "./api/signIn";
 import "./App.css";
 
 const particlesOptions = {
@@ -63,7 +63,7 @@ class App extends Component {
       //     Authorization: token,
       //   },
       // })
-      postSignIn()
+      postSignInWithoutBody()
         .then((response) => response.json())
         .then((data) => {
           this.getUserProfile(data, token)

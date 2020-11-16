@@ -15,7 +15,7 @@ export const postSignIn = (data) => {
     .catch(handleError);
 };
 
-export const postSignIn = () => {
+export const postSignInWithoutBody = () => {
   fetch(baseUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
