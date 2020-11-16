@@ -64,7 +64,7 @@ class App extends Component {
       //   },
       // })
       postSignInWithoutBody()
-        .then((response) => response.json())
+        // .then((response) => response.json())
         .then((data) => {
           this.getUserProfile(data, token)
             .then((user) => {

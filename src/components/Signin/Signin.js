@@ -36,7 +36,7 @@ class Signin extends React.Component {
       signInEmail: this.state.signInEmail,
       signInPassword: this.state.signInPassword,
     })
-      .then((response) => response.json())
+      // .then((response) => response.json())
       .then((data) => {
         if (data.id && data.success === true) {
           this.saveAuthTokenInSession(data.token);
