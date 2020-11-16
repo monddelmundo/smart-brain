@@ -60,13 +60,6 @@ class App extends Component {
     const token = localStorage.getItem("token");
 
     if (token) {
-      // fetch("https://smart-brain-api-devcoral.herokuapp.com/signin", {
-      //   method: "post",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: token,
-      //   },
-      // })
       postSignInWithoutBodyApi(token)
         .then((response) => response.json())
         .then((data) => {
@@ -89,18 +82,6 @@ class App extends Component {
 
   getUserProfile(data, token) {
     if (data?.id != undefined) {
-      // return (
-      //   fetch(
-      //     `https://smart-brain-api-devcoral.herokuapp.com/profile/${data.id}`,
-      //     {
-      //       method: "get",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //         Authorization: token,
-      //       },
-      //     }
-      //   )
-
       return getProfileApi(token, data.id)
         .then((response) => response.json())
         .then((user) => {
@@ -109,7 +90,6 @@ class App extends Component {
           }
         })
         .catch((err) => console.log("Unable to get user profile"));
-      // );
     }
   }
 
@@ -157,27 +137,10 @@ class App extends Component {
   onButtonSubmit = () => {
     const token = localStorage.getItem("token");
     this.setState({ imageUrl: this.state.input });
-    // fetch("http://localhost:3000/imageurl", {
-    //   method: "post",
-    //   headers: { "Content-Type": "application/json", Authorization: token },
-    //   body: JSON.stringify({
-    //     input: this.state.input,
-    //   }),
-    // })
     postImageUrlApi(token, this.state.input)
       .then((response) => response.json())
       .then((response) => {
         if (response) {
-          // fetch("http://localhost:3000/image", {
-          //   method: "put",
-          //   headers: {
-          //     "Content-Type": "application/json",
-          //     Authorization: token,
-          //   },
-          //   body: JSON.stringify({
-          //     id: this.state.user.id,
-          //   }),
-          // })
           getImageApi(token, this.state.user.id)
             .then((response) => response.json())
             .then((count) => {
@@ -193,10 +156,6 @@ class App extends Component {
   onRouteChange = (route) => {
     if (route === "signout") {
       const token = localStorage.getItem("token");
-      // return fetch("http://localhost:3000/signout", {
-      //   method: "get",
-      //   headers: { "Content-Type": "application/json", Authorization: token },
-      // })
       return getSignOutApi(token)
         .then((response) => response.json())
         .then((resp) => {
