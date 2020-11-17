@@ -1,5 +1,7 @@
 import React from "react";
 import { postRegisterApi } from "../../api/register";
+import ValidationError from "../Validation/ValidationError";
+import { ToastContainer, toast } from "react-toastify";
 
 class Register extends React.Component {
   constructor(props) {
@@ -8,6 +10,7 @@ class Register extends React.Component {
       email: "",
       password: "",
       name: "",
+      errorMessage: "",
     };
   }
 
@@ -23,34 +26,45 @@ class Register extends React.Component {
     this.setState({ password: event.target.value });
   };
 
+  validatePassword = (password) => {
+    const pattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,15}$/;
+    if (password.match(pattern)) return true;
+    else return false;
+  };
+
   onSubmitSignIn = () => {
-    // fetch("https://smart-brain-api-devcoral.herokuapp.com/register", {
-    //   method: "post",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     email: this.state.email,
-    //     password: this.state.password,
-    //     name: this.state.name,
-    //   }),
-    // })
-    postRegisterApi({
-      email: this.state.email,
-      password: this.state.password,
-      name: this.state.name,
-    })
-      .then((response) => response.json())
-      .then((resp) => {
-        this.props.onRouteChange("signin");
+    if (!this.validatePassword(this.state.password)) {
+      toast.error("Password Policy error");
+      this.setState({
+        errorMessage:
+          "Password Requirement: 8 to 15 characters which contain at least \
+      one lowercase letter, one uppercase letter, one numeric digit, and one special character",
       });
+    } else {
+      this.setState({ errorMessage: "" });
+
+      postRegisterApi({
+        email: this.state.email,
+        password: this.state.password,
+        name: this.state.name,
+      })
+        .then((response) => response.json())
+        .then((resp) => {
+          toast.success("Successfully Registered!");
+          this.props.onRouteChange("signin");
+        });
+    }
   };
 
   render() {
     return (
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+        <ToastContainer />
         <main className="pa4 black-80">
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Register</legend>
+              <ValidationError errorMessage={this.state.errorMessage} />
               <div className="mt3">
                 <label className="db fw6 lh-copy f6" htmlFor="name">
                   Name

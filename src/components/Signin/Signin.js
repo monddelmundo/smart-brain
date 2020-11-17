@@ -1,6 +1,7 @@
 import React from "react";
 import "./Signin.css";
 import { postSignInApi } from "../../api/signIn";
+import { ToastContainer, toast } from "react-toastify";
 
 class Signin extends React.Component {
   constructor(props) {
@@ -8,6 +9,7 @@ class Signin extends React.Component {
     this.state = {
       signInEmail: "",
       signInPassword: "",
+      disableSubmitBtn: false,
     };
   }
 
@@ -23,15 +25,8 @@ class Signin extends React.Component {
     localStorage.setItem("token", token);
   };
 
-  onSubmitSignIn = () => {
-    // fetch("https://smart-brain-api-devcoral.herokuapp.com/signin", {
-    //   method: "post",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     email: this.state.signInEmail,
-    //     password: this.state.signInPassword,
-    //   }),
-    // })
+  onSubmitSignIn = (e) => {
+    this.setState({ disableSubmitBtn: true });
     postSignInApi({
       signInEmail: this.state.signInEmail,
       signInPassword: this.state.signInPassword,
@@ -47,7 +42,8 @@ class Signin extends React.Component {
         }
       })
       .catch((err) => {
-        alert("Incorrect username and password!");
+        this.setState({ disableSubmitBtn: false });
+        toast.error("Incorrect username and/or password!");
       });
   };
 
@@ -55,6 +51,7 @@ class Signin extends React.Component {
     const { onRouteChange } = this.props;
     return (
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+        <ToastContainer />
         <main className="pa4 black-80">
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
@@ -86,6 +83,7 @@ class Signin extends React.Component {
             </fieldset>
             <div className="">
               <input
+                disabled={this.state.disableSubmitBtn}
                 onClick={this.onSubmitSignIn}
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
                 type="submit"
